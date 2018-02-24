@@ -213,20 +213,21 @@ def create_character(hero):
     hero.proffession = klasa
     return hero
 
-
-def getch():
-    """ Returns input without 'enter'. """
-    import sys
-    import tty
-    import termios
-    fd = sys.stdin.fileno()
-    old_settings = termios.tcgetattr(fd)
-    try:
-        tty.setraw(sys.stdin.fileno())
-        ch = sys.stdin.read(1)
-    finally:
-        termios.tcsetattr(fd, termios.TCSADRAIN, old_settings)
-    return ch
+try:
+    from msvcrt import getwch as getch
+except ImportError:
+    @staticmethod
+    def getch():
+        import tty
+        import termios
+        fd = sys.stdin.fileno()
+        old_settings = termios.tcgetattr(fd)
+        try:
+            tty.setraw(sys.stdin.fileno())
+            ch = sys.stdin.read(1)
+        finally:
+            termios.tcsetattr(fd, termios.TCSADRAIN, old_settings)
+        return ch
 
 
 def controls():
